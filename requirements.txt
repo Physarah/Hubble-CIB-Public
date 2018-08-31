@@ -1,0 +1,10 @@
+astropy >= 2.0.0
+matplotlib >= 2.0.0
+pandas >= 0.18.0
+numpy >= 1.12.1
+scipy >= 0.17.1
+photutils
+astroquery
+pyregion
+itertools
+decimal
