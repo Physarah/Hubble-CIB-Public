@@ -8,6 +8,7 @@ import re
 home_path = "/Users/Physarah/Desktop/Hubble-CIB/"
 data_directory = home_path + "hubble_hunters/data/star_view_raw/"
 raw_file = pd.read_csv(data_directory + "good_data.csv")
+save_path = "/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv"
 
 target_name = raw_file["Target Name"]
 RA_V1 = raw_file["RA V1 Axis"]
@@ -71,4 +72,7 @@ for i in counts:
     background = -2.5*np.log10(float(something)) + float(zero_point_init.iloc[i])
     ABmag_background = np.append(ABmag_background, background)
     
-plt.scatter(master_data_frame['sun_alt'],ABmag_background,2)    
+final_data = (ABmag_background, master_data_frame['sun_alt'], master_data_frame['sun_angle'])
+final_col_names = ('background_abmag','sun_alt', 'sun_angle')
+
+export_csv(data = final_data, col_names = final_col_names, fname =  master_data_frame['target'][1]+ ".csv", save_path = save_path) 

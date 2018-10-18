@@ -10,7 +10,7 @@ HDF_NORTH_GOODS_1 = [2805,3104] # Autumn observation
 
 HDF_NORTH_GOODS_2 = [2805,3004] # Winter observation 
 
-HDF_NORTH_GOODS_3 = [3291,3320] # Spring observation 
+HDF_NORTH_GOODS_3 = [3291,3317] # Spring observation 
 
 NGC_4736_deep_sky = [3941,3960] # Winter observation 
 
@@ -45,19 +45,29 @@ print(filter1_CDF_SOUTH_GOODS,filter2_CDF_SOUTH_GOODS)
 
 # Very good one !!!
 
-plt.scatter(master_data_frame['sun_alt'], ABmag_background, s= 2)
-plt.ylim(73.5,71)
+plt.scatter(master_data_frame['sun_alt'], ABmag_background - 35, s= 3, c = 'b')
+plt.xlabel("Sun Altitude")
+plt.ylabel("Background Flux (AB mag)")
+plt.ylim(71-35,73.5-35)
 plt.xlim(-75,25)
+plt.title("Earthshine variation over 2 orbits \n Hubble Deep Field (2004, 2003) F606W")
 
-plt.scatter(master_data_frame['sun_angle'], ABmag_background, s= 2)
-plt.ylim(73,71)
-plt.xlim(118,135)
+plt.scatter(master_data_frame['sun_alt'], ABmag_background - 40, s= 3, color = 'b')
+plt.xlabel("Sun Altitude")
+plt.ylabel("Background Flux (AB mag)")
+plt.ylim(35,42.5)
+#plt.xlim(-75,25)
+plt.title("Earthshine variation over all fields at 400s exposure")
+
+#plt.scatter(master_data_frame['sun_angle'], ABmag_background, s= 2)
+#plt.ylim(73,71)
+#plt.xlim(118,135)
 
 
 #plt.scatter(master_data_frame['sun_angle'][2805:3104], ABmag_background[2805:3104], s= 2)
     
-plt.scatter(master_data_frame['sun_alt'][3941:3960], ABmag_background[3941:3960], s= 2)
-plt.ylim(78.2,78.8)
+#plt.scatter(master_data_frame['sun_alt'][3941:3960], ABmag_background[3941:3960], s= 2)
+#plt.ylim(78.2,78.8)
 
 
 #plt.scatter(master_data_frame['sun_alt'][CDF_SOUTH_GOODS[0]:CDF_SOUTH_GOODS[1]], ABmag_background[CDF_SOUTH_GOODS[0]:CDF_SOUTH_GOODS[1]], s= 2)
