@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import datetime as dt
 
 home_path = "/Users/Physarah/Desktop/Hubble-CIB/"

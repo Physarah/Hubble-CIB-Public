@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import os as oos
 import datetime as dt
 
-
 home_path = "/Users/Physarah/Desktop/Hubble-CIB/"
 data_directory = home_path + "hubble_hunters/data/star_view_raw/"
 raw_file = pd.read_csv(data_directory + "good_data.csv")
@@ -17,7 +16,8 @@ exposure = raw_file["EXPTIME"]
 sun_alt = raw_file["SUN_ALT"]
 sun_angle = raw_file["SUNANGLE"]
 background = raw_file["MDRIZSKY"]
-filter_type = raw_file["FILTER2"]
+filter_type1 = raw_file["FILTER1"]
+filter_type2 = raw_file["FILTER2"]
 phot_lam = raw_file["PHOTPLAM"]
 phot_mode = raw_file["PHOTMODE"]
 phot_flam = raw_file["PHOTFLAM"]
@@ -28,7 +28,7 @@ end_time = raw_file["Data End Time"]
 
 pandas_data = list(zip(target_name, RA_V1, DEC_V1, 
                                  exposure, sun_alt, sun_angle,
-                                 background, filter_type, phot_lam, 
+                                 background, filter_type1, filter_type2, phot_lam, 
                                  phot_mode, phot_flam, phot_zpt, 
                                  phot_bw, start_time, end_time))
 
@@ -39,7 +39,8 @@ master_data_frame = pd.DataFrame(data = pandas_data, columns = ['target',
                                                                'sun_alt',
                                                                'sun_angle',
                                                                'background',
-                                                               'filter',
+                                                               'filter1',
+                                                               'filter2',
                                                                'photplam',
                                                                'photmode',
                                                                'photflam',
