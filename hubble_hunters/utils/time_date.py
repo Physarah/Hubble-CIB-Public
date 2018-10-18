@@ -4,7 +4,7 @@ import datetime as dt
 
 home_path = "/Users/Physarah/Desktop/Hubble-CIB/"
 data_directory = home_path + "hubble_hunters/data/star_view_raw/"
-raw_file = pd.read_csv(data_directory + "good_data.csv")
+raw_file = pd.read_csv(data_directory + "deep_sky.csv")
 
 start_time = raw_file["Data Start Time"]
 end_time = raw_file["Data End Time"]

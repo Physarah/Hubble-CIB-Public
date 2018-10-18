@@ -4,3 +4,7 @@ photometry_flag:
   photflam: 1
   photzpt: 1
   photbw: 1
+mdrizsky_flag:
+  background: 0
+  
+

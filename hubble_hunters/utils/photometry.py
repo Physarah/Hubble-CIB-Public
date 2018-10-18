@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os as oos
 import datetime as dt
+import re
 
 home_path = "/Users/Physarah/Desktop/Hubble-CIB/"
 data_directory = home_path + "hubble_hunters/data/star_view_raw/"
@@ -52,14 +53,22 @@ master_data_frame = pd.DataFrame(data = pandas_data, columns = ['target',
 master_data_frame['phot_flag_1'] = np.where(master_data_frame['photplam'] > 0, 1, -1)
 master_data_frame['phot_flag_2'] = np.where(master_data_frame['photflam'] > 0, 1, -1)
 
-
 master_data_frame = master_data_frame.drop(master_data_frame[master_data_frame['phot_flag_1']==-1].index)
 master_data_frame = master_data_frame.drop(master_data_frame[master_data_frame['phot_flag_2']==-1].index)
 
+master_data_frame = master_data_frame[(master_data_frame.target != 'ANY')] 
+master_data_frame = master_data_frame[(master_data_frame.target != 'BIAS')]
+master_data_frame = master_data_frame[(master_data_frame.target != 'DARK')]
+master_data_frame = master_data_frame[(master_data_frame.background != None)]
+master_data_frame = master_data_frame[(master_data_frame.background != ' ')]
+
 zero_point_init = -2.5 * np.log10(master_data_frame['photplam']) - 5 * np.log10(master_data_frame['photflam']) - 2.408
 
-counts = np.arange(0,6460)
+counts = np.arange(0,len(zero_point_init))
 ABmag_background = []
 for i in counts:
-    background = -2.5*np.log10(float(master_data_frame['background'].iloc[i])) + float(zero_point_init.iloc[i])
+    something = master_data_frame['background'].iloc[i]
+    background = -2.5*np.log10(float(something)) + float(zero_point_init.iloc[i])
     ABmag_background = np.append(ABmag_background, background)
+    
+plt.scatter(master_data_frame['sun_alt'],ABmag_background,2)    
