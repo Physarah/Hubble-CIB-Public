@@ -7,36 +7,38 @@ library(reshape2)
 library(boot)
 library(RColorBrewer)
 library(xtable)
-install.packages("regclass")
 library(regclass)
-install.packages("pROC")
 library(pROC)
 
-SN2005CZ <- read.csv("/Users/Physarah/Desktop/ASTRO/Hubble-CIB/r_hubble_hunters/data/SN2005CZ.csv")
-hubble_test <- data.frame(SN2005CZ$MDRIZSKY,
-                          SN2005CZ$EXPTIME,
-                          SN2005CZ$Central.Wavelength,
-                          SN2005CZ$SUNANGLE,
-                          SN2005CZ$PHOTBW,
-                          SN2005CZ$PHOTPLAM)
+panel.hist <- function(x, ...)
+{
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(usr[1:2], 0, 1.5) )
+  h <- hist(x, plot = FALSE)
+  breaks <- h$breaks; nB <- length(breaks)
+  y <- h$counts; y <- y/max(y)
+  rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
 
-names(hubble_test) <- c("background", 
-                        "exptime", 
-                        "wavelength", 
-                        "sunangle", 
-                        "filter_bw", 
-                        "pivot_wave")
+F606W <- read.csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/cosmos_field_F606W-2018-10-19.csv")
+good_data <- read.csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/good_data-2018-10-19.csv")
+hubble_test_cleaned2 <- subset(hubble_test2, hubble_test2$background_abmag > 75 & hubble_test2$background_abmag != "Inf")
 
-# Basic overview 
-pairs(hubble_test) 
+hubble_test <- data.frame(F606W)
+hubble_test2 <- data.frame(good_data)
+pairs(hubble_test, pch = 1, cex = 0.3, diag.panel=panel.hist)
 cor(hubble_test)
+pairs(hubble_test_cleaned2, pch = 1, cex = 0.3, diag.panel=panel.hist)
+cor(hubble_test_cleaned2)
+
+file_used = hubble_test_cleaned2
 
 # Training and test data sets (not brilliant with this data set due to doubles, small size)
-shuffled = sample(nrow(hubble_test))
-training = hubble_test[shuffled[1:(length(shuffled)*0.8)],]
-testing = hubble_test[shuffled[(length(shuffled)*0.8+1):length(shuffled)],]
+shuffled = sample(nrow(file_used))
+training = file_used[shuffled[1:(length(shuffled)*0.8)],]
+testing = file_used[shuffled[(length(shuffled)*0.8+1):length(shuffled)],]
 
-data_hubble = data.frame(x = training$sunangle, y = training$background)
+data_hubble = data.frame(x = training$sun_alt, y = training$background_abmag)
 ggplot(aes(x , y), data = data_hubble) +
   geom_point(cex = 2, pch = 20) +
   geom_smooth()+
@@ -44,8 +46,8 @@ ggplot(aes(x , y), data = data_hubble) +
   xlab("sunangle") +
   ggtitle("background as a function of sunangle")
 
-df1_train <-data.frame(x = training$sunangle , y = training$background)
-df2_test <-data.frame(x = testing$sunangle , y = testing$background)
+df1_train <-data.frame(x = training$sun_alt , y = training$background_abmag)
+df2_test <-data.frame(x = testing$sun_alt , y = testing$background_abmag)
 
 ggplot(df1_train, aes(x,y))+ geom_point(aes(color="Training Data"), pch = 20)+
   geom_point(data=df2_test, aes(color="Testing Data"), pch = 18)+
@@ -61,10 +63,10 @@ order <- 1:10
 mse_test <- c()
 mse_train <- c()
 for(n in order){
-  fit <- lm(background ~ poly(sunangle, n, raw=TRUE), data = training)
+  fit <- lm(background_abmag ~ poly(sun_alt, n, raw=TRUE), data = training)
   mse_train[n] <- mse_calc(summary(fit))
   prediciton_test <- predict(fit, newdata = testing)
-  mse_test[n] <- mean((testing$background - prediciton_test)^2)
+  mse_test[n] <- mean((testing$background_abmag - prediciton_test)^2)
 }
 
 mse_data <- data.frame(x = order, y = mse_train)
@@ -93,17 +95,17 @@ best_order_train <- c()
 best_order_test <- c()
 for (m in iters){
   set.seed(m)
-  shuffled = sample(nrow(hubble_test))
-  training = hubble_test[shuffled[1:(length(shuffled)*0.8)],]
-  testing = hubble_test[shuffled[(length(shuffled)*0.8+1):length(shuffled)],]
+  shuffled = sample(nrow(file_used))
+  training = file_used[shuffled[1:(length(shuffled)*0.8)],]
+  testing = file_used[shuffled[(length(shuffled)*0.8+1):length(shuffled)],]
   order <- 1:10
   mse_train2 <- c()
   mse_test2 <- c()
   for(n in order){
-    fit <- lm(background ~ poly(sunangle, n, raw=TRUE), data = training)
+    fit <- lm(background_abmag ~ poly(sun_alt, n, raw=TRUE), data = training)
     mse_train2[n] <- mse_calc(summary(fit))
     prediciton_test <- predict(fit, newdata = testing)
-    mse_test2[n] <- mean((testing$background - prediciton_test)^2)
+    mse_test2[n] <- mean((testing$background_abmag - prediciton_test)^2)
   }
   index_train <- match(min(mse_train2),mse_train2)
   best_order_train[m] <- order[index_train]
@@ -120,11 +122,11 @@ best_order_glm <- c()
 error <- c()
 for (m in iters2){
   set.seed(m)
-  shuffled = sample(nrow(hubble_test))
-  training = hubble_test[shuffled[1:(length(shuffled)*0.8)],]
-  testing = hubble_test[shuffled[(length(shuffled)*0.8+1):length(shuffled)],]
+  shuffled = sample(nrow(file_used))
+  training = file_used[shuffled[1:(length(shuffled)*0.8)],]
+  testing = file_used[shuffled[(length(shuffled)*0.8+1):length(shuffled)],]
   for (i in 1:10){
-    glm.fit=glm(background ~ poly(sunangle, i, raw=TRUE), data = training)
+    glm.fit=glm(background_abmag ~ poly(sun_alt, i, raw=TRUE), data = training)
     error[i]=cv.glm(training,glm.fit,K=5)$delta[1]
   }
   index_glm <- match(min(error),error)
