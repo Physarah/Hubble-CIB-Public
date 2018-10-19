@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import os as oos
 import datetime as dt
 import re
+import datetime
 
 home_path = "/Users/Physarah/Desktop/Hubble-CIB/"
 data_directory = home_path + "hubble_hunters/data/star_view_raw/"
@@ -72,7 +73,8 @@ for i in counts:
     background = -2.5*np.log10(float(something)) + float(zero_point_init.iloc[i])
     ABmag_background = np.append(ABmag_background, background)
     
+file_name = "good_data"    
 final_data = (ABmag_background, master_data_frame['sun_alt'], master_data_frame['sun_angle'])
 final_col_names = ('background_abmag','sun_alt', 'sun_angle')
-
-export_csv(data = final_data, col_names = final_col_names, fname =  master_data_frame['target'][1]+ ".csv", save_path = save_path) 
+date_created = str(datetime.datetime.now())
+export_csv(data = final_data, col_names = final_col_names, fname =  file_name + "-" + date_created[0:10] + ".csv", save_path = save_path) 
