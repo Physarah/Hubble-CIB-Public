@@ -3,7 +3,7 @@ import pandas as pd
 
 F606W_comp = "no"
 all_points = "no"
-filter_comp = "no"
+filter_comp = "yes"
 
 raw_file_cosmo_435 = pd.read_csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/cosmos_field_F435W-2018-10-19.csv")
 raw_file_cosmo_606 = pd.read_csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/cosmos_field_F606W-2018-10-19.csv")
@@ -38,12 +38,21 @@ sun_angle_cosmo_815 = raw_file_cosmos_815["sun_angle"][23:60]
 #plt.ylim(79.54, 79.64)
 
 if F606W_comp == "yes":
-    plt.scatter(sun_alt_cosmo_606,background_cosmo_606,2, label = "Cosmos F606W")
-    plt.scatter(sun_alt_deep,background_deep,2, label = "Hubble Deep F606W")
+    plt.scatter(sun_alt_cosmo_606,background_cosmo_606,7, marker = "*", label = "Cosmos F606W")
+    plt.scatter(sun_alt_deep,background_deep,7, marker = "+", label = "Hubble Deep F606W")
     plt.legend()
     plt.xlabel("Sun Altitude (deg)")
     plt.ylabel("Background (ABmag)")
     plt.title("Earthshine variation over 2 fields \n F606W filter over multiple orbits")
+    plt.show()
+    
+    plt.scatter(sun_angle_cosmo_606,background_cosmo_606,7, marker = "*", label = "Cosmos F606W")
+    plt.scatter(sun_angle_deep,background_deep,7, marker = "+", label = "Hubble Deep F606W")
+    plt.legend()
+    plt.xlabel("Sun Angle (deg)")
+    plt.ylabel("Background (ABmag)")
+    plt.title("Earthshine variation over 2 fields \n F606W filter over multiple orbits")
+    plt.show()
     
 if all_points == "yes":    
     plt.scatter(sun_alt_good,background_good,2)
@@ -52,9 +61,12 @@ if all_points == "yes":
     plt.title("Earthshine variation multiple fields, multiple orbits, multiple filters")
 
 if filter_comp == "yes":
-    plt.scatter(sun_alt_cosmo_435,background_cosmo_435,2, label = "F435W")
-    plt.scatter(sun_alt_cosmo_606[240:280],background_cosmo_606[240:280],2, label = "F606W")
-    plt.scatter(sun_alt_cosmo_815,background_cosmo_815,2, label = "F814W")
-    plt.legend()
+    plt.scatter(sun_alt_cosmo_435,background_cosmo_435,10, marker = "*", label = "F435W")
+    plt.scatter(sun_alt_cosmo_606[240:280],background_cosmo_606[240:280],10,marker = "x", label = "F606W")
+    plt.scatter(sun_alt_cosmo_815,background_cosmo_815,10, marker = ".",label = "F814W")
+    plt.legend(loc = "right")
+    plt.xlabel("Sun Altitude (deg)")
+    plt.ylabel("Background (ABmag)")
+    plt.title("Earth shine contribution from cosmos fields \n Filter comparison")
     
     
