@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-F606W_comp = "no"
+F606W_comp = "yes"
 all_points = "no"
-filter_comp = "yes"
+filter_comp = "no"
 
 raw_file_cosmo_435 = pd.read_csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/cosmos_field_F435W-2018-10-19.csv")
 raw_file_cosmo_606 = pd.read_csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/cosmos_field_F606W-2018-10-19.csv")
