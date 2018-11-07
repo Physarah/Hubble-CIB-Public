@@ -21,10 +21,10 @@ set.seed(4)
 k_values_e <- 1:100
 acc_e <- c()
 for(n in k_values_e){
-  spin_prediciton <- knn(train = data.frame(training$sun_alt), test = data.frame(testing$sun_alt),
+  shine_prediciton <- knn(train = data.frame(training$sun_alt), test = data.frame(testing$sun_alt),
                          cl = high_background_labels, k = n)
   
-  acc_e[n] <- mean(spin_prediciton==high_background_labels)
+  acc_e[n] <- mean(shine_prediciton==high_background_labels)
 }
 
 results_e <- data.frame(x = k_values_e, y = acc_e*100)
@@ -35,7 +35,6 @@ ggplot(aes(x , y), data = results_e) +
   ylab("Accuracy (%)") +
   ggtitle("Accuracy of the model as a function K on 1 variable")
 max(acc_e)
-
 
 # Using both variables 
 
@@ -63,6 +62,6 @@ ggplot(aes(x , y), data = results) +
   geom_line(col = 'red', lty = 5) +
   xlab("K Value") +
   ylab("Accuracy (%)") +
-  ggtitle("Accuracy of the model as a function K for all intrinsic variables")
+  ggtitle("Accuracy of the model as a function K for both variables")
 max(acc)
 

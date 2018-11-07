@@ -5,6 +5,13 @@ import io
 from astropy.coordinates import SkyCoord
 
 def url_retrieve(url, filename):
+    """
+    A function to use URL's to retrieve infomation from the Space Telescope Science Institute
+
+    Args:
+        url (str): a url for the data base being used
+        filename (str): the name of the file storing retreived data
+    """
     with contextlib.closing(requests.get(url, stream=True)) as r:
         r.raise_for_status()
         with io.open(filename, 'wb') as fd:
@@ -13,6 +20,15 @@ def url_retrieve(url, filename):
     return filename, r.headers
 
 def basic_search(ra, dec, instrument, search_rad):
+    """
+    Basic search for a given field and instrument in the archive
+
+    Args:
+        ra (int): Right Ascension of the field
+        dec (int): Declination of the field
+        instrument (str): Which Hubble camera you'd like to use
+        search_rad (int): How large the cone search should be in degrees
+    """
     ra_dec = SkyCoord(ra, dec, frame='icrs', unit='deg')
     const_name = SkyCoord.get_constellation(ra_dec)
     url = "https://archive.stsci.edu/"+instrument+

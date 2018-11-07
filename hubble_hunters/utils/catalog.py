@@ -4,8 +4,14 @@ from itertools import zip_longest
 
 def export_csv(data, col_names, fname, save_path):
     """
-    Used to export any data you want to process in R or any other external program into a 
-    friendly csv file even just for visualisation 
+    Used to export any data you want to process in R or any other external program into a
+    friendly csv file even just for visualisation
+
+    Args:
+        data (str): a pandas data frame of the data you wish to save
+        col_names (str): the coloumn names of the data you are saving
+        fname (str): the file name to save to
+        save_path (str): where you'd like to save the infomation
     """
     export_data = zip_longest(*data, fillvalue = '')
     completeName = oos.path.join(save_path, fname)
