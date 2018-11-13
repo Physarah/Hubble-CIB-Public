@@ -9,6 +9,7 @@ library(RColorBrewer)
 library(xtable)
 library(regclass)
 library(pROC)
+library(MASS)
 
 panel.hist <- function(x, ...)
 {
@@ -21,8 +22,7 @@ panel.hist <- function(x, ...)
 }
 
 F606W <- read.csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/cosmos_field_F606W-2018-10-19.csv")
-good_data <- read.csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/good_data-2018-10-19.csv")
-hubble_test_cleaned2 <- subset(hubble_test2, hubble_test2$background_abmag > 75 & hubble_test2$background_abmag != "Inf")
+good_data <- read.csv("/Users/Physarah/Desktop/Hubble-CIB/hubble_hunters/data/calibrated_csv/deep_sky-2018-10-19.csv")
 
 hubble_test <- data.frame(F606W)
 hubble_test2 <- data.frame(good_data)
@@ -30,6 +30,8 @@ pairs(hubble_test, pch = 1, cex = 0.3, diag.panel=panel.hist)
 cor(hubble_test)
 pairs(hubble_test_cleaned2, pch = 1, cex = 0.3, diag.panel=panel.hist)
 cor(hubble_test_cleaned2)
+hubble_test_cleaned2 <- subset(hubble_test2, hubble_test2$background_abmag > 75 & hubble_test2$background_abmag != "Inf")
+
 
 file_used = hubble_test_cleaned2
 
@@ -53,8 +55,8 @@ ggplot(df1_train, aes(x,y))+ geom_point(aes(color="Training Data"), pch = 20)+
   geom_point(data=df2_test, aes(color="Testing Data"), pch = 18)+
   labs(color="Split Dataset")+
   ylab("Background")+
-  xlab("Sunangle")+
-  ggtitle("background as a function of sunangle with training and test data")
+  xlab("Sun Altitude")+
+  ggtitle("Background as a function of sun altitude \n with training and test data")
 
 # Find best polynomial fit 
 mse_calc<- function(sm) 
@@ -82,9 +84,9 @@ ggplot(aes(x , y), data = mse_data) +
 
 ggplot(data_hubble, aes(x , y)) + 
   geom_point(pch = 20, cex = 2) + 
-  stat_smooth(method = "lm", formula = y ~ poly(x,1), alpha = 0.001, colour="blue", cex = 0.5)+
-  stat_smooth(method = "lm", formula = y ~ poly(x,2), alpha = 0.001, colour="green", cex = 0.5)+
-  stat_smooth(method = "lm", formula = y ~ poly(x,3), alpha = 0.001, colour="red", cex = 0.5)+
+  stat_smooth(method = "lm", formula = y ~ poly(x,6), alpha = 0.001, colour="blue", cex = 0.5)+
+  stat_smooth(method = "lm", formula = y ~ poly(x,10), alpha = 0.001, colour="green", cex = 0.5)+
+  stat_smooth(method = "lm", formula = y ~ poly(x,9), alpha = 0.001, colour="red", cex = 0.5)+
   ylab("Background")+
   xlab("Sunangle")+
   ggtitle("Comparing Polynomials")
@@ -133,5 +135,5 @@ for (m in iters2){
   best_order_glm[m] <- order[index_glm]
 }
 
-# Clear over fitting here (poor sample size) 
 qplot(best_order_glm, geom="histogram", xlab = 'Order', ylab = 'Counts', main = 'Best order using 5 fold Cross Validation', binwidth = 0.5)
+
